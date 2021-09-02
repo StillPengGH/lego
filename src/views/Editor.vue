@@ -1,0 +1,75 @@
+<template>
+	<div class="editor-container">
+    <!-- 页面顶部 -->
+		<a-layout :style="{ background: '#fff' }">
+			<a-layout-header class="header">
+				<div class="header__title">
+					Still乐高
+				</div>
+			</a-layout-header>
+		</a-layout>
+    <!-- 页面主体 -->
+		<a-layout>
+			<a-layout-sider width="300" style="background: yellow">
+				<div class="sidebar-container">
+					组件列表
+				</div>
+			</a-layout-sider>
+			<a-layout style="padding: 0 24px 24px">
+				<a-layout-content class="preview-container">
+					<p>画布区域</p>
+					<div class="preview-list" id="canvas-area"></div>
+				</a-layout-content>
+			</a-layout>
+			<a-layout-sider width="300" style="background: purple" class="settings-panel">
+				组件属性
+			</a-layout-sider>
+		</a-layout>
+	</div>
+</template>
+
+<script>
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+	setup() {
+		return {}
+	},
+})
+</script>
+
+<style lang="scss">
+@import '../style/viriables.scss';
+
+.header {
+	&__title {
+		color: $whiteColor;
+	}
+}
+
+.editor-container {
+  .preview-container {
+    padding: 24px;
+    margin: 0;
+    min-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+  }
+}
+
+.preview-list {
+  padding: 0;
+  margin: 0;
+  min-width: 375px;
+  min-height: 200px;
+  border: 1px solid $light_ef;
+  background: $whiteColor;
+  overflow-x: hidden;
+  overflow-y: auto;
+  position: fixed;
+  margin-top: 50px;
+  max-height: 80vh;
+}
+</style>
