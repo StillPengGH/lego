@@ -1,13 +1,5 @@
 <template>
 	<div class="editor-container">
-    <!-- 页面顶部 -->
-		<a-layout :style="{ background: '#fff' }">
-			<a-layout-header class="header">
-				<div class="header__title">
-					Still乐高
-				</div>
-			</a-layout-header>
-		</a-layout>
     <!-- 页面主体 -->
 		<a-layout>
 			<a-layout-sider width="300" style="background: yellow">
@@ -40,12 +32,6 @@ export default defineComponent({
 
 <style lang="scss">
 @import '../style/viriables.scss';
-
-.header {
-	&__title {
-		color: $whiteColor;
-	}
-}
 
 .editor-container {
   .preview-container {

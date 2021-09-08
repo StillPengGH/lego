@@ -2,6 +2,8 @@
   <div>
     <a-row :gutter="16">
       <a-col :span="6" v-for="item of list" :key="item.id" class="poster-item">
+        <!-- <router-link :to="`/template/${item.id}`"> -->
+        <router-link :to="{name:'template', params:{id:item.id}}">
         <a-card hoverable>
           <template v-slot:cover>
             <img :src="item.coverImg" v-if="item.coverImg" />
@@ -22,6 +24,7 @@
             </template>
           </a-card-meta>
         </a-card>
+        </router-link>
       </a-col>
     </a-row>
   </div>
