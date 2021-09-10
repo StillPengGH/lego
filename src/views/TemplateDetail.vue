@@ -1,15 +1,15 @@
 <template>
 <div>
   <div class="detail-container">
-    <a-row type="flex" justify="center">
+    <a-row type="flex" justify="center" v-if="template">
       <a-col :span="8" class="detail-container__img">
-        <img src="https://static.imooc-lego.com/upload-files/screenshot-889755.png" alt="">
+        <img :src="template.coverImg" alt="">
       </a-col>
       <a-col :span="8">
-        <h2>前端架构师直播海报</h2>
-        <p>如何突破前端成长瓶颈</p>
+        <h2>{{template.title}}</h2>
+        <p>{{template.title}}</p>
         <div class="detail-container__author">
-          <a-avatar>V</a-avatar> 该模版由 <b>Still</b> 创作
+          <a-avatar>V</a-avatar> 该模版由 <b>{{template.author}}</b> 创作
         </div>
         <div class="detial-container__code">
           <span>扫一扫，手机浏览</span>
@@ -27,15 +27,20 @@
 </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script lang="ts"> 
+import { defineComponent, computed } from 'vue'
+import { useStore } from 'vuex'
+import { TemplateProps, GlobalDataProps } from '../store'
 import { useRoute } from 'vue-router'
 
 export default defineComponent({
   setup() {
     const route = useRoute()
+    const store = useStore<GlobalDataProps>()
+    const templateId = route.params.id as string
+    const template = computed<TemplateProps>(() => store.getters.getTemplateById(parseInt(templateId)))
     return {
-      route
+      template
     }
   },
 })

@@ -2,7 +2,6 @@
   <div>
     <a-row :gutter="16">
       <a-col :span="6" v-for="item of list" :key="item.id" class="poster-item">
-        <!-- <router-link :to="`/template/${item.id}`"> -->
         <router-link :to="{name:'template', params:{id:item.id}}">
         <a-card hoverable>
           <template v-slot:cover>
@@ -18,8 +17,8 @@
           <a-card-meta :title="item.title">
             <template v-slot:description>
               <div class="poster-item__desc">
-                <span>作者：Stiil</span>
-                <span class="poster-item__desc__num">0</span>
+                <span>作者：{{item.author}}</span>
+                <span class="poster-item__desc__num">{{item.copiedCount}}</span>
               </div>
             </template>
           </a-card-meta>
@@ -30,19 +29,15 @@
   </div>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
-
+<script lang="ts">
+import { defineComponent, PropType } from 'vue'
+import { TemplateProps } from '../store'
 export default defineComponent({
   name: 'TemplateList',
   props: {
     list: {
-      type: Array,
+      type: Array as PropType<TemplateProps[]>,
       required: true
-    },
-    type: {
-      type: String,
-      default: 'work'
     }
   }
 })

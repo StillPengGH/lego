@@ -4,6 +4,7 @@
 			<!-- 页面顶部 -->
 			<a-layout-header class="index-container__header">
 				<div><router-link to="/">Still乐高</router-link></div>
+        <UserProfile :user="user" />
 			</a-layout-header>
 			<!-- 页面主体 -->
 			<a-layout-content class="content">
@@ -17,11 +18,24 @@
 	</div>
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script lang="ts">
+import { defineComponent, computed } from 'vue'
+import { useStore } from 'vuex'
+import { GlobalDataProps } from '../store'
+import UserProfile from '../components/UserProfile.vue'
 
 export default defineComponent({
 	name: 'Index',
+  components: {
+    UserProfile
+  },
+  setup() {
+    const store = useStore<GlobalDataProps>()
+    const user = computed(() => store.state.user)
+    return {
+      user
+    }
+  }
 })
 </script>
 
@@ -30,6 +44,9 @@ export default defineComponent({
 
 .index-container {
   &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 		color: $whiteColor;
 	}
 }
