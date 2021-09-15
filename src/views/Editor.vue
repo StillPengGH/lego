@@ -10,7 +10,17 @@
 			<a-layout style="padding: 0 24px 24px">
 				<a-layout-content class="preview-container">
 					<p>画布区域</p>
-					<div class="preview-list" id="canvas-area"></div>
+					<div class="preview-list" id="canvas-area">
+            <!-- <div v-for="element in elements" :key="element.id">
+              {{ element.props.text }}
+            </div> -->
+            <component 
+              v-for="element in elements"
+              :key="element.id"
+              :is="element.name"
+              v-bind="element.props"            
+            />
+          </div>
 				</a-layout-content>
 			</a-layout>
 			<a-layout-sider width="300" style="background: purple" class="settings-panel">
@@ -21,11 +31,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
+import { useStore} from 'vuex'
+import { GlobalDataProps } from '../store/index'
+import LText from '../components/LText.vue'
 
 export default defineComponent({
+  components: {
+    LText
+  },
 	setup() {
-		return {}
+    const store = useStore<GlobalDataProps>()
+    const elements = computed(() => store.state.editor.elements )
+		return {
+      elements
+    }
 	},
 })
 </script>
