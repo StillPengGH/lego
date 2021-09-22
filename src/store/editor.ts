@@ -1,6 +1,7 @@
 import { Module } from 'vuex'
 import { v4 as uuidv4 } from 'uuid'
 import { GlobalDataProps } from './index'
+import { TextElementProps } from '../defaultProps'
 
 export interface EditorProps {
   elements: ELementData[];  // 供中间画布渲染数组
@@ -10,7 +11,7 @@ export interface EditorProps {
 interface ELementData {
   id: string;                     // id，uuid v4 生成
   name: string;                   // 业务组件库名称 l-text l-image等等
-  props: { [key: string]: any };  // 这个元素的属性
+  props: Partial<TextElementProps>;  // 这个元素的属性
 }
 
 // 测试数据
@@ -24,6 +25,16 @@ const editor: Module<EditorProps,GlobalDataProps> = {
   state: {
     elements: testElements,
     currentElement: ''
+  },
+  mutations: {
+    addElement(state, props: Partial<TextElementProps>) {
+      const newElements: ELementData = {
+        id: uuidv4(),
+        name: 'l-text',
+        props
+      }
+      state.elements.push(newElements)
+    }
   }
 }
 

@@ -5,6 +5,7 @@
 			<a-layout-sider width="300" style="background: yellow">
 				<div class="sidebar-container">
 					组件列表
+          <ElementsList :list="defaultTextElements" @onItemClick="addElement"/>
 				</div>
 			</a-layout-sider>
 			<a-layout style="padding: 0 24px 24px">
@@ -35,16 +36,27 @@ import { defineComponent, computed } from 'vue'
 import { useStore} from 'vuex'
 import { GlobalDataProps } from '../store/index'
 import LText from '../components/LText.vue'
+import ElementsList from '../components/ElementsList.vue'
+import { defaultTextElements } from '../defaultTextElements'
+import { TextElementProps } from '../defaultProps'
 
 export default defineComponent({
   components: {
-    LText
+    LText,
+    ElementsList
   },
 	setup() {
     const store = useStore<GlobalDataProps>()
     const elements = computed(() => store.state.editor.elements )
+
+    const addElement = (itemData: TextElementProps) => {
+      store.commit('addElement', itemData)
+    }
+    
 		return {
-      elements
+      elements,
+      defaultTextElements,
+      addElement
     }
 	},
 })
