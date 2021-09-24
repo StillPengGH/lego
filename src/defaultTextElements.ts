@@ -1,4 +1,4 @@
-export const defaultTextElements = [
+export const defaultTextElements: any = [
 	{
 		text: '大标题',
 		fontSize: '30px',

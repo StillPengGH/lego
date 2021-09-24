@@ -2,7 +2,7 @@
 	<div class="editor-container">
     <!-- 页面主体 -->
 		<a-layout>
-			<a-layout-sider width="300" style="background: yellow">
+			<a-layout-sider width="300" style="background: #fff">
 				<div class="sidebar-container">
 					组件列表
           <ElementsList :list="defaultTextElements" @onItemClick="addElement"/>
@@ -12,20 +12,24 @@
 				<a-layout-content class="preview-container">
 					<p>画布区域</p>
 					<div class="preview-list" id="canvas-area">
-            <!-- <div v-for="element in elements" :key="element.id">
-              {{ element.props.text }}
-            </div> -->
-            <component 
-              v-for="element in elements"
-              :key="element.id"
-              :is="element.name"
-              v-bind="element.props"            
-            />
+            <EditWraper v-for="element in elements" 
+              :key="element.id" 
+              :id="element.id"
+              :active="element.id === (currentElement && currentElement.id)"
+              @setActive="setActive"
+            >
+              <component :is="element.name" v-bind="element.props" />
+            </EditWraper>
           </div>
 				</a-layout-content>
 			</a-layout>
-			<a-layout-sider width="300" style="background: purple" class="settings-panel">
+			<a-layout-sider width="300" style="background: #fff" class="settings-panel">
 				组件属性
+        <PropsTable 
+          v-if="currentElement && currentElement.props" 
+          :elementProps="currentElement.props"
+          @change="handleChange"
+        />
 			</a-layout-sider>
 		</a-layout>
 	</div>
@@ -36,27 +40,49 @@ import { defineComponent, computed } from 'vue'
 import { useStore} from 'vuex'
 import { GlobalDataProps } from '../store/index'
 import LText from '../components/LText.vue'
+import EditWraper from '../components/EditWrapper.vue'
 import ElementsList from '../components/ElementsList.vue'
+import PropsTable from '../components/PropsTable.vue'
 import { defaultTextElements } from '../defaultTextElements'
 import { TextElementProps } from '../defaultProps'
+import { ELementData } from '../store/editor'
 
 export default defineComponent({
   components: {
     LText,
-    ElementsList
+    ElementsList,
+    EditWraper,
+    PropsTable
   },
 	setup() {
     const store = useStore<GlobalDataProps>()
     const elements = computed(() => store.state.editor.elements )
+    // 获取当前选中的元素
+    const currentElement = computed<ELementData | null >(() => store.getters.getCurrentElement)
 
+    // 添加元素
     const addElement = (itemData: TextElementProps) => {
       store.commit('addElement', itemData)
     }
+
+    // 设置选中
+    const setActive = (id: string) => {
+      store.commit('setActive', id)
+    }
     
+    // 修改选中业务组件元素的数据
+    // eslint-disable-next-line
+    const handleChange = (e: any) => {
+      store.commit('updateElement', e)
+    }
+
 		return {
       elements,
       defaultTextElements,
-      addElement
+      addElement,
+      setActive,
+      currentElement,
+      handleChange
     }
 	},
 })
