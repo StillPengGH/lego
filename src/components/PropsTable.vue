@@ -33,6 +33,7 @@ import { reduce } from 'lodash'
 import { TextElementProps } from '../defaultProps'
 import { mapPropsToForms } from '../propsMap'
 import RenderVNode from '../components/RenderVNode'
+import ColorPicker from './ColorPicker.vue'
 
 // 定义渲染表单类型
 interface FormProps {
@@ -55,7 +56,8 @@ interface FormProps {
 export default defineComponent({
   name: 'PropsTable',
   components: {
-    RenderVNode
+    RenderVNode,
+    ColorPicker
   },
   props: {
     elementProps: {

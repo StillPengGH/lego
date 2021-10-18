@@ -5,7 +5,7 @@ import { PropsToForms, mapPropsToForms } from '../propsMap'
 import { TextElementProps } from '../defaultProps'
 import { Input, InputNumber, Slider, Radio, Select  } from 'ant-design-vue'
 
-// 函数时组件实现方式PropsTable
+// 函数式组件实现方式PropsTable
 
 const mapToComponent = {
   'a-textarea': Input.TextArea,

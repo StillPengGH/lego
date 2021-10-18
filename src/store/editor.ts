@@ -16,7 +16,13 @@ export interface ELementData {
 
 // 测试数据
 export const testElements: ELementData[] = [
-  { id: uuidv4(), name: 'l-text', props: { text: 'hello1', fontSize: '12px', lineHeight: '1', textAlign: 'left', fontFamily: '', color: 'red'} },
+  { 
+    id: uuidv4(), 
+    name: 'l-text', 
+    props: { 
+      text: 'hello1', fontSize: '12px', lineHeight: '1', textAlign: 'left', fontFamily: '', color: '#000000'
+    } 
+  },
   { id: uuidv4(), name: 'l-text', props: { text: 'hello2', fontSize: '24px', lineHeight: '2', textAlign: 'left', fontFamily: '', fontWeight: 'bold'} },
   { id: uuidv4(), name: 'l-text', props: { text: 'hello3', fontSize: '36px', lineHeight: '3', textAlign: 'left', fontFamily: '', actionType: 'url', url: 'https://www.baidu.com'} },
 ]

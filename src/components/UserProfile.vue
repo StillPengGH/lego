@@ -1,7 +1,9 @@
 <template>
+  <!-- 未登录状态 -->
   <a-button type="primary" @click="login" v-if="!user.isLogin">
     登录
   </a-button>
+  <!-- 已登录状态 -->
   <div v-else>
     <a-dropdown-button>
       <router-link to="/setting">{{user.userName}}</router-link>
