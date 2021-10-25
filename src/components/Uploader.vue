@@ -38,10 +38,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, computed, PropType } from 'vue'
+import { defineComponent, ref, reactive, computed, PropType, inject } from 'vue'
 import { DeleteOutlined, LoadingOutlined, FileOutlined } from '@ant-design/icons-vue'
 import axios from 'axios'
 import { last } from 'lodash'
+import { emitter } from '../main'
 import { v4 as uuidv4 } from 'uuid'
 
 // 上传附件对象的类型定义
@@ -85,6 +86,11 @@ export default defineComponent({
     FileOutlined
   },
 	setup(props) {
+    // 发射sonMessage事件，并携带信息
+    emitter.emit('sonMessage', 'from uploader emit message')
+    
+    console.log(inject('testKey'))
+
 		// 变量定义：input type=file 节点对象
 		const fileInput = ref<HTMLInputElement>()
 
