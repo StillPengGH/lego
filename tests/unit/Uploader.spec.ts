@@ -14,6 +14,7 @@ const mockComponents = {
   'DeleteOutlined': mockComponent,
   'LoadingOutlined': mockComponent,
   'FileOutlined': mockComponent,
+  'a-button': mockComponent
 }
 // 创建一个上传文件File对象
 const testFile = new File(['xyz'], 'test.png', { type: 'image/png' })
@@ -272,6 +273,32 @@ describe('Uploader组件测试', () => {
     expect(mockedAxios.post).toHaveBeenCalled()
     await flushPromises()
     expect(wrapper.get('li:first-child').classes()).toContain('upload-success')
+  })
+
+  it('缩略图列表展示测试', async () => {
+    mockedAxios.post.mockResolvedValueOnce({data: {url: 'dumy.url'}})
+    // 模拟URL.createObjectURL，返回一个url地址
+    window.URL.createObjectURL = jest.fn((): string => {
+      return 'test.url'
+    })
+    const wrapper = shallowMount(Uploader, {
+      props: {
+        action: 'test.url',
+        listType: 'picture'
+      }
+    })
+    // 断言：listType为picture时，url的class是否是upload-list-picture
+    expect(wrapper.get('ul').classes()).toContain('upload-list-picture')
+    const fileInput = wrapper.get('input').element as HTMLInputElement
+    setInputValue(fileInput)
+    await wrapper.get('input').trigger('change')
+    await flushPromises()
+    // 断言：上传完成后是否增加一个li
+    expect(wrapper.findAll('li').length).toBe(1)
+    // 断言：是否渲染了img标签
+    expect(wrapper.find('li:first-child img').exists()).toBeTruthy()
+    const firstImg = wrapper.get('li:first-child img')
+    expect(firstImg.attributes('src')).toEqual('test.url')
   })
 
   afterEach(() => {

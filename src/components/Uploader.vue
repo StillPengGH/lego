@@ -22,12 +22,18 @@
 			@change="handleFileChange"
 		/>
 
-		<ul>
+		<ul :class="`upload-list upload-list-${listType}`">
 			<li
 				v-for="file in fileList"
 				:key="file.uid"
 				:class="`upload-list upload-${file.status}`"
 			>
+        <img 
+          v-if="file.url && listType==='picture'"
+          class="upload-list-thumbnail"
+          :src="file.url"
+          :alt="file.name"
+        >
         <span v-if="file.status === 'loading'" class="file-icon"><LoadingOutlined /></span>
         <span v-else class="file-icon"><FileOutlined /></span>
 				<span class="filename">{{ file.name }}</span>
@@ -38,11 +44,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, computed, PropType, inject } from 'vue'
+import { defineComponent, ref, reactive, computed, PropType } from 'vue'
 import { DeleteOutlined, LoadingOutlined, FileOutlined } from '@ant-design/icons-vue'
 import axios from 'axios'
 import { last } from 'lodash'
-import { emitter } from '../main'
 import { v4 as uuidv4 } from 'uuid'
 
 // 上传附件对象的类型定义
@@ -54,10 +59,14 @@ export interface UploadFile {
 	raw: File; // 上传附件本身（类型File）
   // eslint-disable-next-line
   resp?: any; // 服务器响应数据 
+  url?: string; // 缩略图模式对应的图片url
 }
 
 // 上传状态类型定义
 type UploadStatus = 'ready' | 'loading' | 'success' | 'error'
+
+// 列表展示类型定义
+type FileListType = 'picture' | 'text'
 
 // beforUpload属性的类型定义（函数类型，参数是File，返回值是boolean或者Promise）
 type CheckUpload = (file: File) => boolean | Promise<File>
@@ -78,6 +87,10 @@ export default defineComponent({
     autoUpload: { // 是否自动上传
       type: Boolean,
       default: true
+    },
+    listType: {
+      type: String as PropType<FileListType>,
+      default: 'text'
     }
 	},
   components: {
@@ -86,10 +99,6 @@ export default defineComponent({
     FileOutlined
   },
 	setup(props) {
-    // 发射sonMessage事件，并携带信息
-    emitter.emit('sonMessage', 'from uploader emit message')
-    
-    console.log(inject('testKey'))
 
 		// 变量定义：input type=file 节点对象
 		const fileInput = ref<HTMLInputElement>()
@@ -158,6 +167,23 @@ export default defineComponent({
         status: 'ready',
         raw: uploadFile
       })
+
+      // 如果是缩略图模式listType=picture，给fileObj添加url
+      if(props.listType === 'picture') {
+        // 方法一：
+        try {
+          fileObj.url = URL.createObjectURL(uploadFile)
+        } catch (err) {
+          console.log('upload File error', err)
+        }
+        // 方法二：
+        // const fileReader = new FileReader()
+        // fileReader.readAsDataURL(uploadFile)
+        // fileReader.addEventListener('load', () => {
+        //   fileObj.url = fileReader.result as string
+        // })
+      }
+
       fileList.value.push(fileObj)
       // 判断是否是自动上传，如果是直接调用上传方法
       if(props.autoUpload) {

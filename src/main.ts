@@ -11,10 +11,5 @@ export const emitter = mitt()
 
 // 创建一个Vue应用实例
 const app = createApp(App)
-
 app.use(store).use(router).use(Antd)
-console.log('application instance', app)
-
-// 组件实例
-const vm = app.mount('#app')
-console.log('component instance', vm)
+app.mount('#app')

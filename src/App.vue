@@ -5,7 +5,7 @@
 			:before-upload="uploadCheck"
       drag
       :autoUpload="false"
-      ref="sonUploader"
+      listType="picture"
 		>
 			<template v-slot:default>
 				<a-button type="primary">点击上传</a-button>
@@ -23,8 +23,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, getCurrentInstance } from 'vue'
-import { emitter } from './main'
+import { defineComponent } from 'vue'
 import Uploader from './components/Uploader.vue'
 
 export default defineComponent({
@@ -33,16 +32,6 @@ export default defineComponent({
 		Uploader,
 	},
 	setup() {
-    const sonUploader = ref(null)
-    console.log('inner Uploader Component', sonUploader)
-    const internalInstance = getCurrentInstance()
-    console.log('internal component instance', internalInstance)
-
-    // 监听子组件发射的sonMessage事件
-    emitter.on('sonMessage', (e) => {
-      console.log(e)
-    })
-
 		const uploadCheck = (file: File) => {
 			if (file.size > 80000) {
 				return false
@@ -60,7 +49,7 @@ export default defineComponent({
 				new File([file], 'new_name.jpg', { type: file.type })
 			)
 		}
-		return { uploadCheck, uploadCheckPromise, uploadCheckPromise2,sonUploader }
+		return { uploadCheck, uploadCheckPromise, uploadCheckPromise2 }
 	},
 })
 </script>
