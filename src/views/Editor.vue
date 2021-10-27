@@ -2,12 +2,14 @@
 	<div class="editor-container">
     <!-- 页面主体 -->
 		<a-layout>
+      <!-- 左侧元素列表 -->
 			<a-layout-sider width="300" style="background: #fff">
 				<div class="sidebar-container">
-					组件列表
+					元素列表
           <ElementsList :list="defaultTextElements" @onItemClick="addElement"/>
 				</div>
 			</a-layout-sider>
+      <!-- 中间画布区域 -->
 			<a-layout style="padding: 0 24px 24px">
 				<a-layout-content class="preview-container">
 					<p>画布区域</p>
@@ -23,6 +25,7 @@
           </div>
 				</a-layout-content>
 			</a-layout>
+      <!-- 右侧组件属性设置 -->
 			<a-layout-sider width="300" style="background: #fff" class="settings-panel">
 				组件属性
         <PropsTable 
@@ -40,29 +43,31 @@ import { defineComponent, computed } from 'vue'
 import { useStore} from 'vuex'
 import { GlobalDataProps } from '../store/index'
 import LText from '../components/LText.vue'
+import LImage from '../components/LImage.vue'
 import EditWraper from '../components/EditWrapper.vue'
 import ElementsList from '../components/ElementsList.vue'
 import PropsTable from '../components/PropsTable.vue'
 import { defaultTextElements } from '../defaultTextElements'
-import { TextElementProps } from '../defaultProps'
 import { ELementData } from '../store/editor'
 
 export default defineComponent({
   components: {
     LText,
+    LImage,
     ElementsList,
     EditWraper,
     PropsTable
   },
 	setup() {
     const store = useStore<GlobalDataProps>()
+    // 获取元素数组
     const elements = computed(() => store.state.editor.elements )
     // 获取当前选中的元素
     const currentElement = computed<ELementData | null >(() => store.getters.getCurrentElement)
 
     // 添加元素
-    const addElement = (itemData: TextElementProps) => {
-      store.commit('addElement', itemData)
+    const addElement = (element: any) => {
+      store.commit('addElement', element)
     }
 
     // 设置选中

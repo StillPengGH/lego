@@ -16,13 +16,14 @@
     </div>
 
 		<input
+      class="uploader-input"
 			type="file"
 			:style="{ display: 'none' }"
 			ref="fileInput"
 			@change="handleFileChange"
 		/>
 
-		<ul :class="`upload-list upload-list-${listType}`">
+		<ul :class="`upload-list upload-list-${listType}`" v-if="showUploadList">
 			<li
 				v-for="file in fileList"
 				:key="file.uid"
@@ -88,9 +89,13 @@ export default defineComponent({
       type: Boolean,
       default: true
     },
-    listType: {
+    listType: { // 列表显示样式
       type: String as PropType<FileListType>,
       default: 'text'
+    },
+    showUploadList: { // 是否显示上传列表
+      type: Boolean,
+      default: true
     }
 	},
   components: {
@@ -98,7 +103,8 @@ export default defineComponent({
     LoadingOutlined, 
     FileOutlined
   },
-	setup(props) {
+  emits: ['upload-success','upload-error'],
+	setup(props, context) {
 
 		// 变量定义：input type=file 节点对象
 		const fileInput = ref<HTMLInputElement>()
@@ -147,10 +153,19 @@ export default defineComponent({
         .then((resp) => {
           readyFile.status = 'success'
           readyFile.resp = resp.data
-          console.log(resp.data)
+          context.emit('upload-success', {
+            result: resp.data,
+            file: readyFile,
+            list: fileList.value
+          })
         })
-        .catch(() => {
+        .catch((e) => {
           readyFile.status = 'error'
+          context.emit('upload-error', {
+            error: e,
+            file: readyFile,
+            list: fileList.value
+          })
         }).finally(() => {
           if(fileInput.value){
             fileInput.value.value = ''

@@ -83,7 +83,18 @@ export const textDefaultProps: TextElementProps = {
   ...commonDefaultProps
 }
 
-// 获取style属性的key（使用lodash的without排出和样式无关的key）
+// LImage组件特有的属性类型定义
+export interface ImageElementProps extends CommonElementProps {
+  src: string;
+}
+
+// LImage组件属性=特有属性+通用属性
+export const imageDefaultProps: ImageElementProps = {
+  src: 'defalut.url',
+  ...commonDefaultProps
+}
+
+// LText组件获取style属性key的数组：获取style属性的key（使用lodash的without排出和样式无关的key）
 export const textStylePropsKeys = without(
 	Object.keys(textDefaultProps),
 	'actionType',
@@ -91,12 +102,15 @@ export const textStylePropsKeys = without(
 	'text'
 )
 
+// LImage组件获取style属性key的数组：获取style属性的key（使用lodash的without排出和样式无关的key）
+export const imageStylePropsKeys = without(Object.keys(textDefaultProps),'src')
+
 // 使用lodash提供的mapValues对textDefaultProps组装成符合组件内props格式的对象
 // 格式：props: { text: {type: String, default: '123'}, ...},
-export const transformToComopnentProps = (props: TextElementProps) => {
+export const transformToComopnentProps = <T extends {}>(props: T) => {
 	return mapValues(props, (item) => {
 		return {
-			type: item.constructor as StringConstructor,
+			type: (item as any).constructor as StringConstructor,
 			default: item,
 		}
 	})
